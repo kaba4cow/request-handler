@@ -20,6 +20,11 @@ public class RequestBuilder {
 		this.parameters = new HashMap<>();
 	}
 
+	private RequestBuilder(RequestBuilder builder) {
+		this.path = new StringBuilder(builder.path);
+		this.parameters = new HashMap<>(builder.parameters);
+	}
+
 	/**
 	 * Appends a path segment to the request.
 	 * 
@@ -61,6 +66,15 @@ public class RequestBuilder {
 			if (Objects.nonNull(parameter.getValue()))
 				builder.append("/").append(parameter.getKey()).append("=").append(parameter.getValue());
 		return builder.toString();
+	}
+
+	/**
+	 * Creates a copy of this {@code RequestBuilder}.
+	 * 
+	 * @return the {@code RequestBuilder} copy
+	 */
+	public RequestBuilder copy() {
+		return new RequestBuilder(this);
 	}
 
 	/**

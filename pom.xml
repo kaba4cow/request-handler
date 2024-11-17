@@ -7,7 +7,7 @@
 	<name>Request Handler</name>
 	<description>A Java library for handling HTTP-like requests both
 		synchronously and asynchronously</description>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 	<properties>
 		<maven.compiler.source>8</maven.compiler.source>

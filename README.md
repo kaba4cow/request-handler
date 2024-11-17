@@ -17,12 +17,12 @@ Define a controller and annotate methods with `@RequestMapping` to specify their
 
 ```java
 public class Controller {
-    @RequestMapping(path = "/greet")
+    @RequestMapping(path = "greet/")
     public String greetUser() {
         return "Hello, User!";
     }
 
-    @RequestMapping(path = "/sum")
+    @RequestMapping(path = "sum/")
     public int sum(@RequestParam(name = "a") int a, @RequestParam(name = "b") int b) {
         return a + b;
     }
@@ -43,16 +43,16 @@ requestHandler.registerController(new Controller());
 Synchronously:
 
 ```java
-String response = (String) requestHandler.handleRequest("/greet");
+String response = (String) requestHandler.handleRequest("greet/");
 System.out.println(response);
-int sum = (int) requestHandler.handleRequest("/sum/a=5/b=10");
+int sum = (int) requestHandler.handleRequest("sum/a=5/b=10");
 System.out.println(sum);
 ```
 
 Asynchronously:
 
 ```java
-requestHandler.handleAsyncRequest("/greet",
+requestHandler.handleAsyncRequest("greet/",
     result -> System.out.println("Async result: " + result),
     error -> System.err.println("Async error: " + error)
 );
