@@ -167,15 +167,22 @@ public class RequestHandler {
 
 		private final Object instance;
 		private final Method method;
-		private final String path;
+		private String path;
 
 		private MethodHandler(Object instance, Method method, RequestMapping annotation) {
 			this.instance = instance;
 			this.method = method;
-			if (instance.getClass().isAnnotationPresent(RequestMapping.class))
-				this.path = instance.getClass().getAnnotation(RequestMapping.class).path() + annotation.path();
-			else
-				this.path = annotation.path();
+			this.path = annotation.path();
+			if (!this.path.endsWith("/"))
+				this.path += "/";
+			if (instance.getClass().isAnnotationPresent(RequestMapping.class)) {
+				String parentPath = instance.getClass().getAnnotation(RequestMapping.class).path();
+				if (!parentPath.endsWith("/"))
+					parentPath += "/";
+				this.path = parentPath + this.path;
+			}
+			if (!this.path.endsWith("/"))
+				this.path += "/";
 		}
 
 		private Object handle(Map<String, Object> controllerParameters, Map<String, String> pathParameters) {

@@ -1,28 +1,30 @@
 package com.kaba4cow.requesthandler;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Constructs a request path with optional parameters.
  */
 public class RequestBuilder {
 
-	private final StringBuilder path;
+	private final List<String> paths;
 	private final Map<String, Object> parameters;
 
 	/**
 	 * Constructs a new {@code RequestBuilder}.
 	 */
 	public RequestBuilder() {
-		this.path = new StringBuilder();
-		this.parameters = new HashMap<>();
+		this.paths = new ArrayList<>();
+		this.parameters = new ConcurrentHashMap<>();
 	}
 
 	private RequestBuilder(RequestBuilder builder) {
-		this.path = new StringBuilder(builder.path);
-		this.parameters = new HashMap<>(builder.parameters);
+		this.paths = new ArrayList<>(builder.paths);
+		this.parameters = new ConcurrentHashMap<>(builder.parameters);
 	}
 
 	/**
@@ -36,9 +38,7 @@ public class RequestBuilder {
 	 */
 	public RequestBuilder path(String path) {
 		Objects.requireNonNull(path);
-		if (this.path.length() > 0)
-			this.path.append("/");
-		this.path.append(path);
+		this.paths.add(path);
 		return this;
 	}
 
@@ -61,10 +61,12 @@ public class RequestBuilder {
 	 * @return the constructed request string
 	 */
 	public String build() {
-		StringBuilder builder = new StringBuilder(path);
+		StringBuilder builder = new StringBuilder();
+		for (String path : paths)
+			builder.append(path).append("/");
 		for (Map.Entry<String, Object> parameter : parameters.entrySet())
 			if (Objects.nonNull(parameter.getValue()))
-				builder.append("/").append(parameter.getKey()).append("=").append(parameter.getValue());
+				builder.append(parameter.getKey()).append("=").append(parameter.getValue()).append("/");
 		return builder.toString();
 	}
 
@@ -84,7 +86,7 @@ public class RequestBuilder {
 	 */
 	@Override
 	public String toString() {
-		return String.format("RequestBuilder [path=%s, parameters=%s]", path, parameters);
+		return String.format("RequestBuilder [paths=%s, parameters=%s]", paths, parameters);
 	}
 
 }
